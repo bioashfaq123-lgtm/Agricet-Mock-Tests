@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRICET Mock Test Series - PJTSAU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c5f2d 0%, #1a3a1b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5f2d 0%, #1a3a1b 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .timer-bar {
+            background: #f5f5f5;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c5f2d;
+        }
+        
+        .timer.warning {
+            color: #ff6b6b;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+        
+        .question-counter {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 40px;
+            min-height: 400px;
+        }
+        
+        .question-box {
+            margin-bottom: 30px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 16px;
+        }
+        
+        .option:hover {
+            border-color: #2c5f2d;
+            background: #f0f7f1;
+        }
+        
+        .option.selected {
+            background: #2c5f2d;
+            color: white;
+            border-color: #2c5f2d;
+        }
+        
+        .explanation {
+            background: #f9f9f9;
+            padding: 15px 20px;
+            border-left: 4px solid #2c5f2d;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-previous {
+            background: #ddd;
+            color: #333;
+        }
+        
+        .btn-previous:hover:not(:disabled) {
+            background: #bbb;
+        }
+        
+        .btn-next {
+            background: #2c5f2d;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            background: #1a3a1b;
+        }
+        
+        .btn-submit {
+            background: #51cf66;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 15px;
+        }
+        
+        .btn-submit:hover:not(:disabled) {
+            background: #40c057;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .results-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        
+        .results-screen.show {
+            display: block;
+        }
+        
+        .results-screen h2 {
+            color: #2c5f2d;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c5f2d;
+            margin: 30px 0;
+        }
+        
+        .result-details {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .result-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .btn-restart {
+            background: #2c5f2d;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        .start-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        
+        .start-screen.show {
+            display: block;
+        }
+        
+        .start-screen h2 {
+            color: #2c5f2d;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .start-screen p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .btn-start {
+            background: #2c5f2d;
+            color: white;
+            margin-top: 30px;
+            font-size: 18px;
+            padding: 15px 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .question-text {
+                font-size: 16px;
+            }
+            .timer {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AGRICET Mock Test Series</h1>
+            <p>Professor Jayashankar Telangana State Agricultural University</p>
+        </div>
+        
+        <div class="start-screen show" id="startScreen">
+            <h2>Welcome to AGRICET Mock Tests</h2>
+            <p>Practice for your entrance exam with real exam-like questions and timing.</p>
+            <p style="margin-top: 20px;">✓ 10 Questions | ✓ 3 Minutes | ✓ All Courses Covered</p>
+            <button class="btn-start" onclick="startTest()">Start Test</button>
+        </div>
+        
+        <div id="testScreen" style="display: none;">
+            <div class="timer-bar">
+                <div class="timer" id="timerDisplay">3:00</div>
+                <div class="question-counter" id="questionCounter">Question 1 of 10</div>
+            </div>
+            
+            <div class="content">
+                <div class="question-box">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="options" id="optionsContainer"></div>
+                    <div class="explanation" id="explanation"></div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="btn-previous" id="btnPrevious" onclick="previousQuestion()" disabled>← Previous</button>
+                    <button class="btn-next" id="btnNext" onclick="nextQuestion()">Next →</button>
+                </div>
+                
+                <button class="btn-submit" id="btnSubmit" onclick="submitTest()" style="display: none;">Submit Test</button>
+            </div>
+        </div>
+        
+        <div class="results-screen" id="resultsScreen">
+            <h2>Test Completed!</h2>
+            <div class="score-display" id="scoreDisplay">0/10</div>
+            <div class="result-details">
+                <div class="result-item"><strong>Correct:</strong> <span id="correctCount">0</span></div>
+                <div class="result-item"><strong>Incorrect:</strong> <span id="incorrectCount">0</span></div>
+                <div class="result-item"><strong>Accuracy:</strong> <span id="accuracy">0</span>%</div>
+                <div class="result-item"><strong>Time Taken:</strong> <span id="timeTaken">0:00</span></div>
+            </div>
+            <button class="btn-restart" onclick="restartTest()">Take Another Test</button>
+        </div>
+    </div>
+    
+    <script>
+        const questions = [
+            {
+                id: 1,
+                question: "What is the ideal soil pH range for optimal growth of paddy?",
+                options: ["4.5 - 5.5", "5.5 - 6.5", "6.5 - 7.5", "7.5 - 8.5"],
+                correct: 2,
+                course: "DA-101",
+                explanation: "Paddy grows best at pH 6.5-7.5. This range ensures optimal nutrient availability and microbial nitrogen fixation."
+            },
+            {
+                id: 2,
+                question: "Which insect order includes pests like aphids and whiteflies?",
+                options: ["Coleoptera", "Lepidoptera", "Hemiptera", "Diptera"],
+                correct: 2,
+                course: "DA-131",
+                explanation: "Hemiptera (true bugs) includes sap-sucking insects like aphids, leafhoppers, and whiteflies."
+            },
+            {
+                id: 3,
+                question: "What is the primary benefit of crop rotation?",
+                options: ["Increased water retention", "Reduced diseases and improved fertility", "Higher pesticide effectiveness", "Faster growth"],
+                correct: 1,
+                course: "DA-101",
+                explanation: "Crop rotation breaks disease cycles, reduces pest buildup, and improves soil structure and fertility."
+            },
+            {
+                id: 4,
+                question: "Which nutrient is most important for flowering and fruit formation?",
+                options: ["Nitrogen", "Phosphorus", "Potassium", "Sulfur"],
+                correct: 1,
+                course: "DA-122",
+                explanation: "Phosphorus is essential for energy transfer (ATP), flowering, fruit development, and root growth."
+            },
+            {
+                id: 5,
+                question: "What is the recommended spacing for soybean cultivation?",
+                options: ["15 × 10 cm", "30 × 10 cm", "45 × 20 cm", "60 × 30 cm"],
+                correct: 2,
+                course: "DA-201",
+                explanation: "Soybean is sown at 45 × 20 cm spacing for adequate light, air circulation, and disease control."
+            },
+            {
+                id: 6,
+                question: "Which type of manure provides the highest nitrogen content?",
+                options: ["Cow dung", "Poultry manure", "Farm yard manure", "Green manure"],
+                correct: 1,
+                course: "DA-122",
+                explanation: "Poultry manure contains 2-3% nitrogen, higher than cow dung (0.5-1%), but requires proper composting."
+            },
+            {
+                id: 7,
+                question: "What is the objective of Integrated Pest Management (IPM)?",
+                options: ["Complete eradication", "Pesticide-free farming", "Minimize damage using multiple methods", "Increase pesticides"],
+                correct: 2,
+                course: "DA-131",
+                explanation: "IPM keeps pests below economic injury level using cultural, biological, and chemical methods together."
+            },
+            {
+                id: 8,
+                question: "Which hormone promotes seed germination?",
+                options: ["Auxin", "Gibberellin", "Cytokinin", "Ethylene"],
+                correct: 1,
+                course: "DA-101",
+                explanation: "Gibberellins promote germination by stimulating cell elongation and enzyme synthesis, breaking seed dormancy."
+            },
+            {
+                id: 9,
+                question: "What is the most suitable month for monsoon sowing in Telangana?",
+                options: ["May - June", "June - July", "July - August", "August - September"],
+                correct: 1,
+                course: "DA-101",
+                explanation: "June-July is ideal for monsoon sowing with adequate soil moisture and temperature for seed germination."
+            },
+            {
+                id: 10,
+                question: "Which micronutrient deficiency causes interveinal chlorosis?",
+                options: ["Iron", "Zinc", "Boron", "Molybdenum"],
+                correct: 0,
+                course: "DA-122",
+                explanation: "Iron deficiency causes interveinal chlorosis where veins stay green but tissue between turns yellow."
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        let testStarted = false;
+        let timeRemaining = 180;
+        let testStartTime = 0;
+        let timerInterval = null;
+        const DURATION_SECONDS = 180;
+        
+        function initTimer() {
+            testStartTime = Date.now();
+            timeRemaining = DURATION_SECONDS;
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('timerDisplay');
+            timerEl.textContent = display;
+            if (timeRemaining <= 30) {
+                timerEl.classList.add('warning');
+            } else {
+                timerEl.classList.remove('warning');
+            }
+        }
+        
+        function startTest() {
+            testStarted = true;
+            document.getElementById('startScreen').classList.remove('show');
+            document.getElementById('testScreen').style.display = 'block';
+            initTimer();
+            displayQuestion();
+        }
+        
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                if (answers[currentQuestion] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('btnPrevious').disabled = currentQuestion === 0;
+            document.getElementById('btnNext').style.display = currentQuestion === questions.length - 1 ? 'none' : 'block';
+            document.getElementById('btnSubmit').style.display = currentQuestion === questions.length - 1 ? 'block' : 'none';
+        }
+        
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.remove('selected');
+                if (i === index) {
+                    opt.classList.add('selected');
+                    const question = questions[currentQuestion];
+                    const explanationEl = document.getElementById('explanation');
+                    explanationEl.innerHTML = `<strong>Explanation:</strong> ${question.explanation}`;
+                    explanationEl.classList.add('show');
+                }
+            });
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        function submitTest() {
+            clearInterval(timerInterval);
+            let correct = 0;
+            questions.forEach((question, index) => {
+                if (answers[index] === question.correct) {
+                    correct++;
+                }
+            });
+            const timeTaken = Math.floor((Date.now() - testStartTime) / 1000);
+            const minutes = Math.floor(timeTaken / 60);
+            const seconds = timeTaken % 60;
+            
+            document.getElementById('testScreen').style.display = 'none';
+            document.getElementById('resultsScreen').classList.add('show');
+            document.getElementById('scoreDisplay').textContent = `${correct}/${questions.length}`;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = questions.length - correct;
+            document.getElementById('accuracy').textContent = Math.round((correct / questions.length) * 100);
+            document.getElementById('timeTaken').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function restartTest() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            testStarted = false;
+            document.getElementById('resultsScreen').classList.remove('show');
+            document.getElementById('startScreen').classList.add('show');
+        }
+    </script>
+</body>
+</html>
